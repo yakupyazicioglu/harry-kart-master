@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HarryKartApp<harry-kart>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "se.atg.service.harrykart.HarryKartApp",
+            "projectName": "harry-kart",
+            "args": ""
+        }
+    ]
+}
