@@ -41,6 +41,11 @@ public class Game {
         this.powerUps = powerUps;
     }
 
+    @Override
+    public String toString() {
+        return "Game{" + "numberOfLoops=" + numberOfLoops + ", participants=" + participants + ", powerUps=" + powerUps + '}';
+    }
+
     
     
     

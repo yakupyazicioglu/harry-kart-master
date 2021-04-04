@@ -41,7 +41,6 @@ public class HarryKartController {
         Participant participant = new Participant();
         Game game = new Game();
         PowerUp powerUp = new PowerUp();
-        List<Integer> powerUps = new ArrayList<>();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -78,23 +77,20 @@ public class HarryKartController {
             if (node1.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement1 = (Element) node1;
                 Integer loopNo = Integer.parseInt(eElement1.getAttribute("number"));
-                
-                for (int temp2 = 0; temp2 < loopList1.getLength(); temp2++) {
-                    Node node2 = loopList1.item(temp2);
-                    if (node2.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement2 = (Element) node2;
-                        
-                        powerUps.add(Integer.parseInt(eElement2.getElementsByTagName("lane").item(temp2).getTextContent()));
-                    }
+
+                List<Integer> powerUps = new ArrayList<>();
+
+                for (int temp2 = 0; temp2 < 4; temp2++) {
+                    powerUps.add(Integer.parseInt(eElement1.getElementsByTagName("lane").item(temp2).getTextContent()));
 
                 }
                 powerUp.getLoopsMap().put(loopNo, powerUps);
 
             }
-            System.out.println(powerUp.toString());
-            
         }
-        return powerUp.toString();
+        
+        game.setPowerUps(powerUp);
+        //System.out.println(game.toString());
+        return game.toString();
     }
 }
-
