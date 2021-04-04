@@ -5,44 +5,28 @@
  */
 package models;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author YY
  */
 public class PowerUp {
-    private int loopNo;
-    private int laneNo;
-    private int power;
+    private HashMap<Integer, List<Integer>> loopsMap = new HashMap<Integer, List<Integer>>();
 
-    public int getLoopNo() {
-        return loopNo;
+    public HashMap<Integer, List<Integer>> getLoopsMap() {
+        return loopsMap;
     }
 
-    public void setLoopNo(int loopNo) {
-        this.loopNo = loopNo;
-    }
-
-    public int getLaneNo() {
-        return laneNo;
-    }
-
-    public void setLaneNo(int laneNo) {
-        this.laneNo = laneNo;
-    }
-
-    public int getPower() {
-        return power;
-    }
-
-    public void setPower(int power) {
-        this.power = power;
+    public void setLoopsMap(HashMap<Integer, List<Integer>> loopsMap) {
+        this.loopsMap = loopsMap;
     }
 
     @Override
     public String toString() {
-        return "PowerUp{" + "loopNo=" + loopNo + ", laneNo=" + laneNo + ", power=" + power + '}';
+        return "PowerUp{" + "loopsMap=" + loopsMap + '}';
     }
-    
-    
-    
+   
 }

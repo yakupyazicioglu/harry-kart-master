@@ -15,7 +15,7 @@ import java.util.List;
 public class Game {
     private int numberOfLoops;
     private List<Participant> participants;
-    private List<PowerUp> powerUps;
+    private PowerUp powerUps;
 
     public int getNumberOfLoops() {
         return numberOfLoops;
@@ -33,13 +33,15 @@ public class Game {
         this.participants = participants;
     }
 
-    public List<PowerUp> getPowerUps() {
+    public PowerUp getPowerUps() {
         return powerUps;
     }
 
-    public void setPowerUps(List<PowerUp> powerUps) {
+    public void setPowerUps(PowerUp powerUps) {
         this.powerUps = powerUps;
     }
+
+    
     
     
 

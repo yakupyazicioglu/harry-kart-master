@@ -1,33 +1,20 @@
 package se.atg.service.harrykart.rest;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import java.io.IOException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.springframework.batch.item.ItemReader;
 import se.atg.service.harrykart.XmlReader;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import models.Game;
 import models.Participant;
 import models.PowerUp;
 import org.xml.sax.SAXException;
-import se.atg.service.harrykart.PopulateDTOWithParsedXML;
 
 @RestController
 @RequestMapping("/api")
@@ -51,11 +38,10 @@ public class HarryKartController {
     @RequestMapping(method = RequestMethod.GET, path = "/part")
     public String participants() throws SAXException, IOException, ParserConfigurationException {
         List<Participant> participants = new ArrayList<Participant>();
-        List<PowerUp> powerUps = new ArrayList<PowerUp>();
-
         Participant participant = new Participant();
         Game game = new Game();
         PowerUp powerUp = new PowerUp();
+        List<Integer> powerUps = new ArrayList<>();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -81,71 +67,34 @@ public class HarryKartController {
                 participants.add(participant);
             }
         }
-        
+
         game.setParticipants(participants);
-        
-        
-        NodeList loopList = document.getElementsByTagName("loop");
+
+        NodeList loopList1 = document.getElementsByTagName("loop");
         //NodeList powerList = document.getElementsByTagName("lane");
 
-        for (int temp = 0; temp < loopList.getLength(); temp++) {
-            Node node = loopList.item(temp);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) node;
+        for (int temp = 0; temp < loopList1.getLength(); temp++) {
+            Node node1 = loopList1.item(temp);
+            if (node1.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement1 = (Element) node1;
+                Integer loopNo = Integer.parseInt(eElement1.getAttribute("number"));
+                
+                for (int temp2 = 0; temp2 < loopList1.getLength(); temp2++) {
+                    Node node2 = loopList1.item(temp2);
+                    if (node2.getNodeType() == Node.ELEMENT_NODE) {
+                        Element eElement2 = (Element) node2;
+                        
+                        powerUps.add(Integer.parseInt(eElement2.getElementsByTagName("lane").item(temp2).getTextContent()));
+                    }
 
-                powerUp.setLoopNo(Integer.parseInt(eElement.getAttribute("number")));
-                powerUp.setLaneNo(Integer.parseInt(eElement.getAttribute("number")));
-                powerUp.setPower(Integer.parseInt(eElement.getElementsByTagName("lane").item(0).getTextContent()));
+                }
+                powerUp.getLoopsMap().put(loopNo, powerUps);
 
-                powerUps.add(powerUp);
             }
+            System.out.println(powerUp.toString());
+            
         }
-        System.out.println(powerUps.toString());
-        return powerUps.toString();
+        return powerUp.toString();
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/par")
-    public String data() throws IOException, SAXException, ParserConfigurationException {
-        //Get Document Builder
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-
-        //Build Document
-        Document document = builder.parse(new File("src/main/resources/input_0.xml"));
-
-        //Normalize the XML Structure; It's just too important !!
-        document.getDocumentElement().normalize();
-
-        //Here comes the root node
-        Element root = document.getDocumentElement();
-        System.out.println(root.getNodeName());
-
-        //Get all datas
-        NodeList nList1 = document.getElementsByTagName("harryKart");
-
-        System.out.println("");    //Just a separator
-        //Print each employee's detail
-        Element element = (Element) nList1.item(0);
-        System.out.println("Number Of Loops : " + element.getElementsByTagName("numberOfLoops").item(0).getTextContent());
-
-        //Get all datas
-        NodeList nList = document.getElementsByTagName("participant");
-
-        System.out.println("============================");
-
-        for (int temp = 0; temp < nList.getLength(); temp++) {
-            Node node = nList.item(temp);
-            System.out.println("");    //Just a separator
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                //Print each employee's detail
-                Element eElement = (Element) node;
-                System.out.println("Lane : " + eElement.getElementsByTagName("lane").item(0).getTextContent());
-                System.out.println("Name : " + eElement.getElementsByTagName("name").item(0).getTextContent());
-                System.out.println("Base Speed : " + eElement.getElementsByTagName("baseSpeed").item(0).getTextContent());
-            }
-        }
-
-        return "{ \"message\": \"Don't know how to play yet\" }";
-    }
-
 }
+
