@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import models.Game;
+import models.Horse;
 import models.Participant;
 import models.PowerUp;
 import org.xml.sax.SAXException;
@@ -20,26 +21,32 @@ import org.xml.sax.SAXException;
 @RequestMapping("/api")
 public class HarryKartController {
 
+    Game game = new Game();
+
     @RequestMapping(method = RequestMethod.POST, path = "/play")
     public String playHarryKart() {
+        List<Integer> times = new ArrayList<>(4);
 
+        for (int temp = 0; temp < game.getNumberOfLoops(); temp++) {
+            for (int temp2 = 0; temp2 < game.getParticipants().size(); temp2++) {
+                int powerUp = game.getPowerUps().getLoopsMap().get(temp).get(temp2);
+                int baseSpeed = game.getParticipants().get(temp).getBaseSpeed();
+                int horseSpeed = baseSpeed + powerUp;
+                Integer loopTime = game.getLaneDistance() / horseSpeed;
+                times.add(temp, loopTime);
+                System.out.println(" Loop: " + temp + " Participant: " + temp2 + " PowerUp: " + powerUp + 
+                        " baseSpeed: " + baseSpeed + " horseSpeed: " + horseSpeed + " loopTime: " + loopTime);
+            }
+
+        }
+        System.out.println(times.toString());
         return "{ \"message\": \"Don't know how to play yet\" }";
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/participants")
-    public String datas() {
-        XmlReader reader = new XmlReader();
-        ItemReader<models.Game> result = reader.itemReader();
-        System.out.println(result);
-
-        return "{ \"message\": \"Don't know how to play yet\" }";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/part")
     public String participants() throws SAXException, IOException, ParserConfigurationException {
         List<Participant> participants = new ArrayList<Participant>();
         Participant participant = new Participant();
-        Game game = new Game();
         PowerUp powerUp = new PowerUp();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -51,9 +58,9 @@ public class HarryKartController {
         Element eCard = (Element) nCard.item(0);
         game.setNumberOfLoops(Integer.parseInt(eCard.getElementsByTagName("numberOfLoops").item(0).getTextContent()));
 
-        NodeList parList = document.getElementsByTagName("participant");
-        for (int temp = 0; temp < parList.getLength(); temp++) {
-            Node node = parList.item(temp);
+        NodeList participantList = document.getElementsByTagName("participant");
+        for (int temp = 0; temp < participantList.getLength(); temp++) {
+            Node node = participantList.item(temp);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) node;
                 //Create new Employee Object
@@ -70,7 +77,6 @@ public class HarryKartController {
         game.setParticipants(participants);
 
         NodeList loopList1 = document.getElementsByTagName("loop");
-        //NodeList powerList = document.getElementsByTagName("lane");
 
         for (int temp = 0; temp < loopList1.getLength(); temp++) {
             Node node1 = loopList1.item(temp);
@@ -88,7 +94,7 @@ public class HarryKartController {
 
             }
         }
-        
+
         game.setPowerUps(powerUp);
         //System.out.println(game.toString());
         return game.toString();

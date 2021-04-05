@@ -9,19 +9,10 @@ package models;
  * @author YY
  */
 public class Horse {
-    private String hName;  
     private int baseSpeed;  
     private int currentSpeed;  
     private int powerChange; 
     private int totalTime = 0;
-
-    public String gethName() {
-        return hName;
-    }
-
-    public void sethName(String hName) {
-        this.hName = hName;
-    }
 
     public int getBaseSpeed() {
         return baseSpeed;
@@ -46,6 +37,16 @@ public class Horse {
     public void setPowerChange(int powerChange) {
         this.powerChange = powerChange;
     }
+
+    public int getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(int totalTime) {
+        this.totalTime = totalTime;
+    }
+    
+    
     
     
 }

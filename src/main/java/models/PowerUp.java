@@ -5,6 +5,8 @@
  */
 package models;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,13 @@ import java.util.Map;
  */
 public class PowerUp {
     private HashMap<Integer, List<Integer>> loopsMap = new HashMap<Integer, List<Integer>>();
+
+    public PowerUp() {
+        List<Integer> firstLoop = new ArrayList<>(Arrays.asList(0,0,0,0));
+        loopsMap.put(0, firstLoop);
+    }
+    
+    
 
     public HashMap<Integer, List<Integer>> getLoopsMap() {
         return loopsMap;
