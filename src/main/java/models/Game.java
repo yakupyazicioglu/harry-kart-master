@@ -63,7 +63,7 @@ public class Game {
     public void setTotalTimes(List<Integer> totalTimes) {
         this.totalTimes = totalTimes;
     }
-
+   
     @Override
     public String toString() {
         return "Game{" + "numberOfLoops=" + numberOfLoops + ", participants=" + participants + ", powerUps=" + powerUps + '}';

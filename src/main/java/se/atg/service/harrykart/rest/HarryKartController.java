@@ -4,17 +4,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.batch.item.ItemReader;
-import se.atg.service.harrykart.XmlReader;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import models.Game;
 import models.Horse;
 import models.Participant;
 import models.PowerUp;
+import models.Ranking;
+import org.springframework.http.MediaType;
 import org.xml.sax.SAXException;
 
 @RestController
@@ -22,13 +23,16 @@ import org.xml.sax.SAXException;
 public class HarryKartController {
 
     Game game = new Game();
-    
-    @RequestMapping(method = RequestMethod.POST, path = "/play")
+
+    @RequestMapping(method = RequestMethod.POST, path = "/play", produces = MediaType.APPLICATION_JSON_VALUE)
     public String playHarryKart() throws SAXException, ParserConfigurationException, IOException {
-        List<Horse> ranking = new ArrayList<>();
+        List<Horse> horses = new ArrayList<>();        
+        List<Ranking> ranking = new ArrayList<>();
+
         for (int lane = 0; lane < game.getParticipants().size(); lane++) {
             Horse horse = new Horse();
             Participant participant = game.getParticipants().get(lane);
+            horse.setName(participant.getName());
             participant.setCurrentSpeed(participant.getBaseSpeed());
             for (int loop = 0; loop < game.getNumberOfLoops(); loop++) {
 
@@ -36,21 +40,25 @@ public class HarryKartController {
                 participant.setCurrentSpeed(participant.getCurrentSpeed() + powerUp);
                 Integer loopTime = game.getLaneDistance() / participant.getCurrentSpeed();
                 participant.setFinishTime(participant.getFinishTime() + loopTime);
+                horse.setFinishTime(participant.getFinishTime());
             }
-            ranking.add(horse);
-            System.out.println(" Participant: " + participant
-                    + " Finish Time: " + horse.getFinishTime());
-
+            horses.add(horse);
         }
 
-        String results = "ranking: [{position: 1, horse: TIMETOBELUCKY}, "
-                + "{position: 2, horse: HERCULES BOKO}, "
-                + "{position: 3, horse: CARGO DOOR}";
+        Collections.sort(horses);
 
-        return results;
+        for (int rank = 0; rank < horses.size() - 1; rank++) {
+            Ranking newRanking = new Ranking();
+            horses.get(rank).setPosition(rank);
+            newRanking.setName(horses.get(rank).getName());
+            newRanking.setPosition(horses.get(rank).getPosition() + 1);
+            ranking.add(newRanking);
+        }
+        
+        return "ranking: " + ranking.toString();
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/game")
+    @RequestMapping(method = RequestMethod.POST, path = "/game", produces = MediaType.APPLICATION_JSON_VALUE)
     private Game ParseXMLtoObject() throws SAXException, ParserConfigurationException, IOException {
         List<Participant> participants = new ArrayList<>();
         Participant participant;
@@ -59,7 +67,7 @@ public class HarryKartController {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File("src/main/resources/input_0.xml"));
+        Document document = builder.parse(new File("src/main/resources/input_1.xml"));
         document.getDocumentElement().normalize();
 
         NodeList nCard = document.getElementsByTagName("harryKart");
@@ -104,7 +112,7 @@ public class HarryKartController {
         }
 
         game.setPowerUps(powerUp);
-        
+
         return game;
     }
 }

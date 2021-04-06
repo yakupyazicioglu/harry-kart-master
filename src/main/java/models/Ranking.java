@@ -9,11 +9,10 @@ package models;
  *
  * @author YY
  */
-public class Horse implements Comparable< Horse> {
+public class Ranking {
 
     private String name;
     private int position = 0;
-    private Integer finishTime = 0;
 
     public String getName() {
         return name;
@@ -31,22 +30,9 @@ public class Horse implements Comparable< Horse> {
         this.position = position;
     }
 
-    public int getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(int finishTime) {
-        this.finishTime = finishTime;
-    }
-
     @Override
     public String toString() {
-        return "Ranking{" + "position=" + position + ", horse=" + name + '}';
+        return "{position=" + position + ", horse=" + name + '}';
     }
 
-
-    @Override
-    public int compareTo(Horse h) {
-        return this.getFinishTime() - h.getFinishTime();
-    }
 }

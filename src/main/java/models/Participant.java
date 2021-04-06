@@ -10,9 +10,11 @@ package models;
  * @author YY
  */
 public class Participant {
+
     private String lane;
     private String name;
     private int baseSpeed;
+    private int position = 0;
     private int currentSpeed = 0;
     private int finishTime = 0;
 
@@ -40,6 +42,16 @@ public class Participant {
         this.baseSpeed = baseSpeed;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    
+    
+
     public int getCurrentSpeed() {
         return currentSpeed;
     }
@@ -55,12 +67,10 @@ public class Participant {
     public void setFinishTime(int finishTime) {
         this.finishTime = finishTime;
     }
-    
-    
 
     @Override
     public String toString() {
         return "Participant{" + "lane=" + lane + ", name=" + name + ", baseSpeed=" + baseSpeed + '}';
     }
-   
+
 }
