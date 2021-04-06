@@ -13,6 +13,8 @@ public class Participant {
     private String lane;
     private String name;
     private int baseSpeed;
+    private int currentSpeed = 0;
+    private int finishTime = 0;
 
     public String getLane() {
         return lane;
@@ -37,6 +39,24 @@ public class Participant {
     public void setBaseSpeed(int baseSpeed) {
         this.baseSpeed = baseSpeed;
     }
+
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(int currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
+
+    public int getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(int finishTime) {
+        this.finishTime = finishTime;
+    }
+    
+    
 
     @Override
     public String toString() {

@@ -22,34 +22,42 @@ import org.xml.sax.SAXException;
 public class HarryKartController {
 
     Game game = new Game();
-
+    
     @RequestMapping(method = RequestMethod.POST, path = "/play")
-    public String playHarryKart() {
-        List<Integer> times = new ArrayList<>(4);
+    public String playHarryKart() throws SAXException, ParserConfigurationException, IOException {
+        List<Horse> ranking = new ArrayList<>();
+        for (int lane = 0; lane < game.getParticipants().size(); lane++) {
+            Horse horse = new Horse();
+            Participant participant = game.getParticipants().get(lane);
+            participant.setCurrentSpeed(participant.getBaseSpeed());
+            for (int loop = 0; loop < game.getNumberOfLoops(); loop++) {
 
-        for (int temp = 0; temp < game.getNumberOfLoops(); temp++) {
-            for (int temp2 = 0; temp2 < game.getParticipants().size(); temp2++) {
-                int powerUp = game.getPowerUps().getLoopsMap().get(temp).get(temp2);
-                int baseSpeed = game.getParticipants().get(temp).getBaseSpeed();
-                int horseSpeed = baseSpeed + powerUp;
-                Integer loopTime = game.getLaneDistance() / horseSpeed;
-                times.add(temp, loopTime);
-                System.out.println(" Loop: " + temp + " Participant: " + temp2 + " PowerUp: " + powerUp + 
-                        " baseSpeed: " + baseSpeed + " horseSpeed: " + horseSpeed + " loopTime: " + loopTime);
+                int powerUp = game.getPowerUps().getLoopsMap().get(loop).get(lane);
+                participant.setCurrentSpeed(participant.getCurrentSpeed() + powerUp);
+                Integer loopTime = game.getLaneDistance() / participant.getCurrentSpeed();
+                participant.setFinishTime(participant.getFinishTime() + loopTime);
             }
+            ranking.add(horse);
+            System.out.println(" Participant: " + participant
+                    + " Finish Time: " + horse.getFinishTime());
 
         }
-        System.out.println(times.toString());
-        return "{ \"message\": \"Don't know how to play yet\" }";
+
+        String results = "ranking: [{position: 1, horse: TIMETOBELUCKY}, "
+                + "{position: 2, horse: HERCULES BOKO}, "
+                + "{position: 3, horse: CARGO DOOR}";
+
+        return results;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/participants")
-    public String participants() throws SAXException, IOException, ParserConfigurationException {
-        List<Participant> participants = new ArrayList<Participant>();
-        Participant participant = new Participant();
+    @RequestMapping(method = RequestMethod.POST, path = "/game")
+    private Game ParseXMLtoObject() throws SAXException, ParserConfigurationException, IOException {
+        List<Participant> participants = new ArrayList<>();
+        Participant participant;
         PowerUp powerUp = new PowerUp();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(new File("src/main/resources/input_0.xml"));
         document.getDocumentElement().normalize();
@@ -96,7 +104,7 @@ public class HarryKartController {
         }
 
         game.setPowerUps(powerUp);
-        //System.out.println(game.toString());
-        return game.toString();
+        
+        return game;
     }
 }
