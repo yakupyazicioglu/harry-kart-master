@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import models.Game;
-import models.Horse;
 import models.Participant;
 import models.PowerUp;
 import models.Ranking;
@@ -20,22 +19,21 @@ import org.xml.sax.SAXException;
 
 @RestController
 @RequestMapping("/api")
-public class HarryKartController {
+public class HarryKartController  {
 
     Game game = new Game();
 
     @RequestMapping(method = RequestMethod.POST, path = "/play", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String playHarryKart() throws SAXException, ParserConfigurationException, IOException {
-        List<Horse> horses = new ArrayList<>();        
-        List<Ranking> ranking = new ArrayList<>();
+    public String playHarryKart() {
+        List<Ranking> horses = new ArrayList<>();
 
         for (int lane = 0; lane < game.getParticipants().size(); lane++) {
-            Horse horse = new Horse();
+            Ranking horse = new Ranking();
             Participant participant = game.getParticipants().get(lane);
             horse.setName(participant.getName());
             participant.setCurrentSpeed(participant.getBaseSpeed());
-            for (int loop = 0; loop < game.getNumberOfLoops(); loop++) {
 
+            for (int loop = 0; loop < game.getNumberOfLoops(); loop++) {
                 int powerUp = game.getPowerUps().getLoopsMap().get(loop).get(lane);
                 participant.setCurrentSpeed(participant.getCurrentSpeed() + powerUp);
                 Integer loopTime = game.getLaneDistance() / participant.getCurrentSpeed();
@@ -47,15 +45,13 @@ public class HarryKartController {
 
         Collections.sort(horses);
 
-        for (int rank = 0; rank < horses.size() - 1; rank++) {
-            Ranking newRanking = new Ranking();
-            horses.get(rank).setPosition(rank);
-            newRanking.setName(horses.get(rank).getName());
-            newRanking.setPosition(horses.get(rank).getPosition() + 1);
-            ranking.add(newRanking);
+        for (int rank = 0; rank < horses.size(); rank++) {
+            horses.get(rank).setPosition(rank + 1);
         }
-        
-        return "ranking: " + ranking.toString();
+
+        horses.removeIf(h -> h.getPosition() > 3);
+
+        return "ranking: " + horses.toString();
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/game", produces = MediaType.APPLICATION_JSON_VALUE)

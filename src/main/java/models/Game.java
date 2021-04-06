@@ -16,8 +16,6 @@ public class Game {
     private int laneDistance = 1000;
     private int numberOfLoops;
     private List<Participant> participants;
-    private List<Participant> ranking;
-    private List<Integer> totalTimes;
     private PowerUp powerUps;
 
     public int getLaneDistance() {
@@ -46,22 +44,6 @@ public class Game {
 
     public void setPowerUps(PowerUp powerUps) {
         this.powerUps = powerUps;
-    }
-
-    public List<Participant> getRanking() {
-        return ranking;
-    }
-
-    public void setRanking(List<Participant> ranking) {
-        this.ranking = ranking;
-    }
-
-    public List<Integer> getTotalTimes() {
-        return totalTimes;
-    }
-
-    public void setTotalTimes(List<Integer> totalTimes) {
-        this.totalTimes = totalTimes;
     }
    
     @Override

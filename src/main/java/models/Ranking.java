@@ -9,10 +9,11 @@ package models;
  *
  * @author YY
  */
-public class Ranking {
+public class Ranking implements Comparable< Ranking> {
 
     private String name;
     private int position = 0;
+    private Integer finishTime = 0;
 
     public String getName() {
         return name;
@@ -28,6 +29,19 @@ public class Ranking {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public Integer getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Integer finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    @Override
+    public int compareTo(Ranking h) {
+        return this.getFinishTime() - h.getFinishTime();
     }
 
     @Override
