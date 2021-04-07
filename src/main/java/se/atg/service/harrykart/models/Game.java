@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package models;
+package se.atg.service.harrykart.models;
 
 import java.util.List;
 
@@ -13,7 +8,7 @@ import java.util.List;
  */
 public class Game {
 
-    private int laneDistance = 1000;
+    private final int laneDistance = 1000;
     private int numberOfLoops;
     private List<Participant> participants;
     private PowerUp powerUps;

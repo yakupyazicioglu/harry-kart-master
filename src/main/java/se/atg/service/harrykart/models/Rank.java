@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package models;
+package se.atg.service.harrykart.models;
 
 /**
  *
  * @author YY
  */
-public class Ranking implements Comparable< Ranking> {
+public class Rank implements Comparable< Rank> {
 
     private String name;
     private int position = 0;
@@ -40,7 +35,7 @@ public class Ranking implements Comparable< Ranking> {
     }
 
     @Override
-    public int compareTo(Ranking h) {
+    public int compareTo(Rank h) {
         return this.getFinishTime() - h.getFinishTime();
     }
 
